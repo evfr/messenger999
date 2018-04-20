@@ -42,7 +42,7 @@ function authenticate(req, callback) {
 //PUT /token
 function verifyToken(req, callback){
     // check header or url parameters or post parameters for token
-    var token = req.body.token || req.query.token || req.cookies._token.token;
+    var token = req.body.token || req.query.token || (req.cookies._token && req.cookies._token.token);
     // decode token
     if (token) {
       // verifies secret and checks exp
