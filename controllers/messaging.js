@@ -92,7 +92,13 @@ module.exports = function(app){
         var authRes = auth.verifyToken(req, function (authRes){
             if (authRes.success){
                 let filter = { $or : [ { sender : authRes.payload.id }, {receiver: authRes.payload.id } ] };
-
+                if (req.query.unread){
+                    // filter = {$and : [
+                    //     filter,
+                    //     { read : true }
+                    // ]
+                    filter.read = {$ne: true};
+                }
                 Message.find(filter).sort('createdAt').exec((err, foundMessages) => {
                     if (err) {
                         console.warn(err.message);
@@ -126,6 +132,15 @@ module.exports = function(app){
                             success: true,
                             message: foundMessage
                         }).send();
+                        //set message as read
+                        if (!foundMessage.read){
+                            foundMessage.read = true;
+                            foundMessage.save(function(err) {
+                                if(err) {
+                                    console.log(err.message);
+                                }
+                            });                            
+                        }
                     }
                 });
             }

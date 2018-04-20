@@ -6,6 +6,7 @@ var MessageSchema = new Schema({
   receiver: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},//{type: String, required: true},  
   message: String,
   subject: String,
+  read: { type: Boolean, default: false},
   createdAt: { type: Date,default: Date.now}
 }, { collection: 'messages' });
 
